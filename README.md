@@ -1,0 +1,2 @@
+# buy-sell
+ django project

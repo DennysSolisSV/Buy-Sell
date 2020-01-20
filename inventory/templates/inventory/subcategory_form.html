@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<form method="POST" class="form-inline">
+    {% csrf_token %}
+    <div class="col-xl-12 col-md-12 mb-12">
+    {% if obj %}
+         {% firstof "warning" as color %} <!-- create variables in template. -->
+    {% else %}
+        {% firstof "success" as color %}
+    {% endif %}
+     <div class="card border-left-{{ color }} shadow h-100 py-2">
+        <div class="card-body">
+        <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-{{ color }} text-uppercase mb-1">
+                {% if obj %} Edit {% else %} New {% endif %} Subcategory
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-5">
+                    <div class="input-group">
+                        <!-- <input type="text" name="description" id="id_description" class="form-control" value="{% if obj %} {{ obj.description }} {% endif %}"> -->
+                        {{ form.category }}
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="form-group">
+                        <!-- <label for="id_status">Status</label>
+                        <input type="checkbox" name="status" id="id_status" class="form-control" {% if obj.status %} checked {% endif %}> -->
+                        {{ form.description }}
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <!-- <label for="id_status">Status</label>
+                        <input type="checkbox" name="status" id="id_status" class="form-control" {% if obj.status %} checked {% endif %}> -->
+                        {{ form.status }}
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <div class="col">
+                <button type="submit" class="btn btn-danger" ><span class="fa fa-save"></span>Save</button>
+                <a href="{% url 'inventory:subcategory_list' %}" class="btn btn-success"><span class="fa fa-undo">Cancel</span></a>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+</form>
+{% endblock %}
