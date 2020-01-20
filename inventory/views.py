@@ -3,8 +3,17 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
-from .models import Category, SubCategory, Brand, UnitOfMeasurement
-from .forms import CategoryForm, SubCategoryForm, BrandForm, UnitOfMeasurementForm
+from .models import (
+    Category, SubCategory, Brand, UnitOfMeasurement,
+    Product,
+)
+
+from .forms import (
+    CategoryForm, SubCategoryForm, BrandForm, 
+    UnitOfMeasurementForm, ProductForm,
+)
+
+# CATEGORY VIEWS (CRUD)
 
 class CategoryView(LoginRequiredMixin, ListView):
     model =  Category
@@ -46,6 +55,8 @@ class CategoryDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('inventory:category_list')
 
 
+# SUBCATEGORY VIEWS (CRUD)
+
 class SubcategoryView(LoginRequiredMixin, ListView):
     model =  SubCategory
     template_name = 'inventory/subcategory_list.html'
@@ -65,6 +76,7 @@ class SubCategoryNew(LoginRequiredMixin, CreateView):
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
 
+
 class SubCategoryUpdate(LoginRequiredMixin, UpdateView):
     model = SubCategory
     template_name = 'inventory/subcategory_form.html'
@@ -77,11 +89,15 @@ class SubCategoryUpdate(LoginRequiredMixin, UpdateView):
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
 
+
 class SubCategoryDelete(LoginRequiredMixin, DeleteView):
     model = SubCategory
     template_name = 'inventory/catalog_del.html'
     context_object_name = 'obj'
     success_url = reverse_lazy('inventory:subcategory_list')
+
+
+# BRAND VIEWS (CRUD) 
 
 class BrandsView(LoginRequiredMixin, ListView):
     model =  Brand
@@ -101,6 +117,7 @@ class BrandNew(LoginRequiredMixin, CreateView):
         form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
+
 
 class BrandUpdate(LoginRequiredMixin, UpdateView):
     model = Brand
@@ -137,6 +154,8 @@ def brand_activate_deactivate(request, id):
     return render(request, template_name, context)
 
 
+# UNIT OF MEASUREMENT VIEWS
+
 class UnitOfMeasurementView(LoginRequiredMixin, ListView):
     model =  UnitOfMeasurement
     template_name = 'inventory/unit_of_measurement_list.html'
@@ -155,6 +174,7 @@ class UnitOfMeasurementNew(LoginRequiredMixin, CreateView):
         form.instance.created_by = self.request.user
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
+
 
 class UnitOfMeasurementUpdate(LoginRequiredMixin, UpdateView):
     model = UnitOfMeasurement
@@ -187,5 +207,62 @@ def unit_of_measurement_activate_deactivate(request, id):
         unit_of_measurement.save()
         
         return redirect("inventory:unit_of_measurement_list")
+
+    return render(request, template_name, context)
+
+
+# PRODUCT VIEWS 
+
+class ProductsView(LoginRequiredMixin, ListView):
+    model =  Product
+    template_name = 'inventory/product_list.html'
+    context_object_name =  'obj'
+    login_url = reverse_lazy('bases:login')
+
+
+class ProductNew(LoginRequiredMixin, CreateView):
+    model = Product
+    template_name = 'inventory/product_form.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('inventory:product_list')
+    login_url = reverse_lazy('bases:login')
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
+
+
+class ProductUpdate(LoginRequiredMixin, UpdateView):
+    model = Product
+    template_name = 'inventory/product_form.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('inventory:product_list')
+    login_url = reverse_lazy('bases:login')
+    context_object_name = "obj"
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
+
+
+def product_activate_deactivate(request, id):
+    product = Product.objects.get(pk=id)
+    context = {}
+    template_name = "inventory/catalog_del.html"
+
+    if not product:
+        return redirect("inventory:product_list")
+
+    if request.method == "GET":
+        context = { 'obj': product}
+    else:
+        if product.status == True:
+            product.status = False
+        else:
+            product.status = True
+        product.save()
+
+        return redirect("inventory:product_list")
 
     return render(request, template_name, context)

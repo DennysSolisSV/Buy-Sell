@@ -1,6 +1,6 @@
 from django import forms  
 
-from .models import Category, SubCategory, Brand, UnitOfMeasurement
+from .models import Category, SubCategory, Brand, UnitOfMeasurement, Product
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -70,3 +70,26 @@ class UnitOfMeasurementForm(forms.ModelForm):
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [
+            'cod','barcode','description', 'status', 
+            'price', 'stock', 'last_purchase', 
+            'brand', 'subcategory', 'unit_measurements'
+        ]
+        exclude = [
+            'created', 'updated', 'created_by',
+            'updated_by'
+        ]
+        widget = {'description': forms.TextInput}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })
+        self.fields['last_purchase'].widget.attrs['readonly'] = True
+        self.fields['stock'].widget.attrs['readonly'] = True
