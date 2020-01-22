@@ -89,6 +89,12 @@
     </div>
   </div>
 
+  <!-- Modal  -->
+
+  <div class="modal fade" id="popup">
+
+  </div>
+
   <!-- Bootstrap core JavaScript-->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -101,6 +107,27 @@
 
   <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+  {% block control_modal %}
+    <script>
+      function open_modal(url)
+      {
+        $("#popup").load(url, function(){
+          $(this).modal({
+            backdrop: 'static',
+            keyboard: false
+          });
+          $(this).modal('show');
+        });
+        return false;
+      }
+
+      function close_modal(url){
+        $('#popup').modal('hide');
+        return false;
+      }
+    </script>
+  {% endblock control_modal %}
 
 </body>
 

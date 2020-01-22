@@ -12,7 +12,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                 <div class="dropdown-header">Dropdown Header:</div>
-                <a class="dropdown-item" href="{% url 'inventory:product_new' %}"><i class="fad fa-plus-square"></i>New</a>
+                <a class="dropdown-item" onclick="return open_modal('{% url 'inventory:product_new' %}')" href="#"><i class="fad fa-plus-square"></i>New</a>
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
                         <td>{{ item.created|date:"m/d/Y H:i" }}</td> <!-- darle formato a la fecha -->
                         <td>{{ item.updated|date:"m/d/Y H:i" }}</td>
                         <td>
-                            <a href="{% url 'inventory:product_edit' item.pk %}" class="btn btn-warning btn-circle" role="button"><i class="far fa-edit"></i></a>
+                            <a onclick="return open_modal('{% url 'inventory:product_edit' item.pk %}')" href="#" class="btn btn-warning btn-circle" role="button"><i class="far fa-edit"></i></a>
                             {% if item.status %}
                                 <a href="{% url 'inventory:product_act-inac' item.pk %}" class="btn btn-danger btn-circle" role="button"><i class="fas fa-thumbs-down"></i></a>
                             {% else %}
