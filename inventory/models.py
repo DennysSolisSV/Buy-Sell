@@ -7,7 +7,7 @@ class ClassModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "created_%(class)ss")
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "updated_%(class)ss")
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "updated_%(class)ss", blank=True, null=True)
 
 
     class Meta:
