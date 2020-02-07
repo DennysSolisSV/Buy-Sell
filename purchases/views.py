@@ -1,8 +1,11 @@
-from django.shortcuts import render
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
+from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
+
+import json 
 from .forms import VendorForm
 from .models import Vendor
 
@@ -35,3 +38,21 @@ class VendorUpdate(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
+
+def vendor_inactivate(request, pk):
+    template_name = 'purchases/inactivate_vendor.html'
+    obj = Vendor.objects.get(pk=pk)
+
+    if not obj:
+        return HttpResponse('Vendor not found ' + str(pk))
+
+    if request.method == 'GET':
+        context = {'obj': obj}
+
+    if request.method == 'POST':
+        obj.status = False
+        obj.save()
+        context = {'obj': 'OK'}
+        return  HttpResponse('Vendor Inactivated')
+
+    return render(request, template_name, context)

@@ -46,6 +46,11 @@
                         <td>{{ item.status|yesno:"Active, Inactive" }}</td>
                         <td>
                             <a onclick="return open_modal('{% url 'purchases:vendor_edit' item.pk %}')" href="#" class="btn btn-warning btn-circle" role="button"><i class="far fa-edit"></i></a>
+                            {% if item.status %}
+                                <a onclick="return open_modal('{% url 'purchases:vendor_inactivate' item.pk %}')" href="#" class="btn btn-danger btn-circle" role="button"><i class="fas fa-thumbs-down"></i></a>
+                            {% else %}
+                                <a onclick="return open_modal('{% url 'purchases:vendor_inactivate' item.pk %}')" href="#" class="btn btn-success btn-circle" role="button"><i class="fas fa-thumbs-up"></i></a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
