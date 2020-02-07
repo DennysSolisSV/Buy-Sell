@@ -12,7 +12,7 @@
                         Inactivate {{ obj.description }}?
                       </div>
                     </div>
-                    <button type="button" class="btn btn-danger">Yes</button>
+                    <button type="button" class="btn btn-danger" id="btnInactivate">Yes</button>
                     <!-- CLOSE MODAL  -->
                     <button type="button" class="btn btn-success" onclick="return close_modal()">
                       Cancel
@@ -25,4 +25,33 @@
         </div>
     </form>
   </div>
-</div>
+</div> 
+
+<script>
+  $(document).ready(function(){
+    $("#btnInactivate").click(function(e){
+      e.preventDefault();
+      
+      var id = {{ obj.pk }};
+      var template = "{% url 'purchases:vendor_inactivate' obj.pk %}";
+      var data = {"id": id};
+      data =  JSON.stringify(data);
+
+      $.ajax({
+        type: "POST",
+        url: template,
+        data: data,
+        success: function(response){
+          console.log(response);
+          close_modal();
+          alert(response);
+        },
+        error: function(jqXHR, textStatus, errorThrow){
+          console.log(textStatus, errorThrow);
+          close_modal();
+        }
+      });
+    });
+
+  });
+</script>
