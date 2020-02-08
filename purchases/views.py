@@ -50,9 +50,15 @@ def vendor_inactivate(request, pk):
         context = {'obj': obj}
 
     if request.method == 'POST':
-        obj.status = False
+        if obj.status == True:
+            obj.status = False
+            msg = 'Vendor Inactivated'
+        else:
+            obj.status = True
+            msg = 'Vendor Activate'
+
         obj.save()
         context = {'obj': 'OK'}
-        return  HttpResponse('Vendor Inactivated')
+        return  HttpResponse(msg)
 
     return render(request, template_name, context)

@@ -9,12 +9,21 @@
                   <div class="col mr-2">
                     <div class="text-xs font-weight-bold text-warning text-uppercase">
                       <div class="alert">
-                        Inactivate {{ obj.description }}?
+                        {% if obj.status == True %}
+                          Inactivate {{ obj.description }}?
+                        {% else %}
+                          Activate {{ obj.description }}?
+                        {% endif %}
                       </div>
                     </div>
-                    <button type="button" class="btn btn-danger" id="btnInactivate">Yes</button>
+                      {% if obj.status == True %}
+                        <button type="button" class="btn btn-danger" id="btnInactivate">Yes</button>
+                      {% else %}
+                        <button type="button" class="btn btn-success" id="btnInactivate">Yes</button>
+                      {% endif %}
+                    
                     <!-- CLOSE MODAL  -->
-                    <button type="button" class="btn btn-success" onclick="return close_modal()">
+                    <button type="button" class="btn btn-warning" onclick="return close_modal()">
                       Cancel
                   </button>
                   </div>
@@ -29,6 +38,21 @@
 
 <script>
   $(document).ready(function(){
+
+    // GETTING CSR TOKEN
+    var token =  $("input[name=csrfmiddlewaretoken]").val();
+
+    //CONFIG TO ADD A HEADER WITH THE CSRTOKEN
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                xhr.setRequestHeader("X-CSRFToken", token);
+            }
+        }
+    });
+
+
+    // ACTIVATE IT AJAX PROCESS WITH A BOTTON CLICK.
     $("#btnInactivate").click(function(e){
       e.preventDefault();
       
@@ -41,6 +65,10 @@
         type: "POST",
         url: template,
         data: data,
+        // ADDING THE HEADER TO THIS AJAX BEFORE SEND.
+        beforeSend: function(xhr, settings){
+          $.ajaxSettings.beforeSend(xhr,settings);
+        },
         success: function(response){
           console.log(response);
           close_modal();
