@@ -72,10 +72,11 @@
         success: function(response){
           console.log(response);
           close_modal();
-          alert(response);
+          var type=(response.startsWith('Vendor not found') ? 'red':'green' );
+          message(response, type);
         },
         error: function(jqXHR, textStatus, errorThrow){
-          console.log(textStatus, errorThrow);
+          message(errorThrow, "red");
           close_modal();
         }
       });

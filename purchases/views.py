@@ -41,10 +41,10 @@ class VendorUpdate(LoginRequiredMixin, UpdateView):
 
 def vendor_inactivate(request, pk):
     template_name = 'purchases/inactivate_vendor.html'
-    obj = Vendor.objects.get(pk=pk)
+    obj = Vendor.objects.filter(pk=pk).first()
 
     if not obj:
-        return HttpResponse('Vendor not found ' + str(pk))
+        return HttpResponse('Vendor not found ('+ str(pk) +')' )
 
     if request.method == 'GET':
         context = {'obj': obj}

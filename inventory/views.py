@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
+
+from django.contrib import messages
 
 from .models import (
     Category, SubCategory, Brand, UnitOfMeasurement,
@@ -22,12 +25,13 @@ class CategoryView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('bases:login')
 
 
-class CategoryNew(LoginRequiredMixin, CreateView):
+class CategoryNew(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Category
     template_name = 'inventory/category_form.html'
     form_class = CategoryForm
     success_url = reverse_lazy('inventory:category_list')
     login_url = reverse_lazy('bases:login')
+    success_message =  "Category created"
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -35,13 +39,14 @@ class CategoryNew(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class CategoryUpdate(LoginRequiredMixin, UpdateView):
+class CategoryUpdate(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = Category
     template_name = 'inventory/category_form.html'
     form_class = CategoryForm
     success_url = reverse_lazy('inventory:category_list')
     login_url = reverse_lazy('bases:login')
     context_object_name = "obj"
+    success_message = "Edited"
 
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
@@ -145,10 +150,12 @@ def brand_activate_deactivate(request, id):
     else:
         if brand.status == True:
             brand.status = False
+            messages.add_message(request, messages.WARNING, "Brand Inactivated!" )
         else:
             brand.status = True
+            messages.add_message(request, messages.SUCCESS, "Brand Activated!" )
         brand.save()
-
+        
         return redirect("inventory:brand_list")
 
     return render(request, template_name, context)

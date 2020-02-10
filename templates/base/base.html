@@ -22,6 +22,9 @@
   <!-- Custom styles for this page -->
   <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
+  <!-- Jquery Confirm for this template-->
+  <link href="{% static 'vendor/jquery_confirm/jquery-confirm.min.css' %}" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -96,8 +99,8 @@
   </div>
 
   <!-- Bootstrap core JavaScript-->
-  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static  'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static  'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
   <!-- Core plugin JavaScript-->
   <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
@@ -105,22 +108,26 @@
   <!-- Custom scripts for all pages-->
   <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
-  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-  <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-  <script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap4.min.js"></script>
+ <!-- Page level plugins -->
+ <script src="{% static 'vendor/datatables/jquery.dataTables.min.js'%}"></script>
+ <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 
-  {% block js %}
-    <script>
-      $(document).ready(function () {
-          $('.table').DataTable();
-          });
-    </script>
+ <script src="{% static 'vendor/jquery_confirm/jquery-confirm.min.js' %}"></script>
 
-  {% endblock %}
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>  
 
+ <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+ <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table-locale-all.min.js"></script>
 
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 
+  
+
+  <script>
+    $(document).ready(function () {
+        $('.table').DataTable();
+        });
+  </script>
 
   {% block control_modal %}
     <script>
@@ -140,10 +147,37 @@
         $('#popup').modal('hide');
         return false;
       }
+
+      function message(msg, color="green"){
+        if (color == "success") {
+          color = "green";
+        }
+        if (color == "error") {
+          color = "red";
+        }
+        if (color == "warning"){
+          color = "orange";
+        }
+
+        jQuery.alert({
+          title: "",
+          theme: "material",
+          type: color,
+          content: msg
+        });
+     };
+
+     {% if messages %}
+      {% for message in messages %}
+        message("{{ message }}", "{{ message.tags }}");
+      {% endfor %}
+     {% endif %}
+
+
     </script>
   {% endblock control_modal %}
 
-
+ {% block js %}{% endblock %}
 
 
 </body>
