@@ -31,11 +31,21 @@
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Catalog inventory</h6>
-              <a class="collapse-item" href="{% url 'inventory:category_list' %}">Categories</a>
-              <a class="collapse-item" href="{% url 'inventory:subcategory_list' %}">Subcategories</a>
-              <a class="collapse-item" href="{% url 'inventory:brand_list' %}">Brands</a>
-              <a class="collapse-item" href="{% url 'inventory:unit_of_measurement_list' %}">Unit of measurement</a>
-              <a class="collapse-item" href="{% url 'inventory:product_list' %}">Products</a>
+              {% if perms.inventory.view_category %}
+                <a class="collapse-item" href="{% url 'inventory:category_list' %}">Categories</a>
+              {% endif %}
+              {% if perms.inventory.view_subcategory %}
+                <a class="collapse-item" href="{% url 'inventory:subcategory_list' %}">Subcategories</a>
+              {% endif %}
+              {% if perms.inventory.view_brands %}
+                <a class="collapse-item" href="{% url 'inventory:brand_list' %}">Brands</a>
+              {% endif %}
+              {% if perms.inventory.view_unitofmeasurement %}
+                <a class="collapse-item" href="{% url 'inventory:unit_of_measurement_list' %}">Unit of measurement</a>
+              {% endif %}
+              {% if perms.inventory.view_product %}
+                <a class="collapse-item" href="{% url 'inventory:product_list' %}">Products</a>
+              {% endif %}
 
               <h6 class="collapse-header">Purchases</h6>
               <a class="collapse-item" href="{% url 'purchases:vendor_list' %}">Vendors</a>
