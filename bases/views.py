@@ -10,8 +10,11 @@ class NotPrivileges(PermissionRequiredMixin):
     redirect_field_name = 'redirect_to'
 
     def handle_no_permission(self):
-        self.login_url = 'bases:home_not_privileges'
-        return HttpResponseRedirect(reverse_lazy(self.login_url))
+        if self.request.user.is_authenticated:
+            self.login_url = 'bases:home_not_privileges'
+            return HttpResponseRedirect(reverse_lazy(self.login_url))
+        else:
+            return super(NotPrivileges, self).handle_no_permission()
 
 class Home(LoginRequiredMixin, generic.TemplateView):
     template_name = 'index.html'

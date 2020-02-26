@@ -22,7 +22,7 @@ from bases.views import NotPrivileges
 
 # CATEGORY VIEWS (CRUD)
 
-class CategoryView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class CategoryView(LoginRequiredMixin, NotPrivileges, ListView):
     permission_required = 'inventory.view_category'
     model =  Category
     template_name = 'inventory/category_list.html'
