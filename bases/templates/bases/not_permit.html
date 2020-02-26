@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <div class="col-xl-6 col-md-6 mb-6">
+        <div class="card border-left-danger shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    User: <mark>{{ user.username }}  </mark> 
+                </div>
+                <div class="dropdown-divider"></div>
+
+                <div class="row">
+                    <mark>Don't have enough privileges</mark> to load this option.
+                    <br>
+                    <small>To access, you must log in with a user with necessary privileges.</small>
+
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="row">
+                    <div class="col">
+                        <a href="{% url 'bases:home' %}" class="btn btn-success"><span class="fa fa-home"></span> Go to home</a>
+                        <a href="{% url 'bases:login' %}" class="btn btn-success"><span class="fa fa-user"></span> Login</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <i class="far fa-calendar-plus fa-2x text-gray-300"></i>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}

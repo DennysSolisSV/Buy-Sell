@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin, PermissionRequiredMixin,
+)
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 
@@ -16,9 +18,12 @@ from .forms import (
     UnitOfMeasurementForm, ProductForm,
 )
 
+from bases.views import NotPrivileges
+
 # CATEGORY VIEWS (CRUD)
 
-class CategoryView(LoginRequiredMixin, ListView):
+class CategoryView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'inventory.view_category'
     model =  Category
     template_name = 'inventory/category_list.html'
     context_object_name =  'obj'
@@ -62,7 +67,8 @@ class CategoryDelete(LoginRequiredMixin, DeleteView):
 
 # SUBCATEGORY VIEWS (CRUD)
 
-class SubcategoryView(LoginRequiredMixin, ListView):
+class SubcategoryView(LoginRequiredMixin, NotPrivileges, ListView):
+    permission_required = 'inventory.view_subcategory'
     model =  SubCategory
     template_name = 'inventory/subcategory_list.html'
     context_object_name =  'obj'
