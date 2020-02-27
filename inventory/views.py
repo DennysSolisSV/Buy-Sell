@@ -8,6 +8,8 @@ from django.urls import reverse_lazy
 
 from django.contrib import messages
 
+from django.contrib.auth.decorators import login_required, permission_required
+
 from .models import (
     Category, SubCategory, Brand, UnitOfMeasurement,
     Product,
@@ -22,20 +24,20 @@ from bases.views import NotPrivileges
 
 # CATEGORY VIEWS (CRUD)
 
-class CategoryView(LoginRequiredMixin, NotPrivileges, ListView):
+class CategoryView(NotPrivileges, ListView):
     permission_required = 'inventory.view_category'
     model =  Category
     template_name = 'inventory/category_list.html'
     context_object_name =  'obj'
-    login_url = reverse_lazy('bases:login')
+    
 
 
-class CategoryNew(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+class CategoryNew(SuccessMessageMixin, NotPrivileges, CreateView):
+    permission_required = 'inventory.add_category'
     model = Category
     template_name = 'inventory/category_form.html'
     form_class = CategoryForm
     success_url = reverse_lazy('inventory:category_list')
-    login_url = reverse_lazy('bases:login')
     success_message =  "Category created"
 
     def form_valid(self, form):
@@ -44,12 +46,12 @@ class CategoryNew(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class CategoryUpdate(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+class CategoryUpdate(SuccessMessageMixin, NotPrivileges, UpdateView):
+    permission_required = 'inventory.change_category'
     model = Category
     template_name = 'inventory/category_form.html'
     form_class = CategoryForm
     success_url = reverse_lazy('inventory:category_list')
-    login_url = reverse_lazy('bases:login')
     context_object_name = "obj"
     success_message = "Edited"
 
@@ -58,7 +60,8 @@ class CategoryUpdate(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class CategoryDelete(LoginRequiredMixin, DeleteView):
+class CategoryDelete(NotPrivileges, DeleteView):
+    permission_required = 'inventory.delete_category'
     model = Category
     template_name = 'inventory/catalog_del.html'
     context_object_name = 'obj'
@@ -67,20 +70,19 @@ class CategoryDelete(LoginRequiredMixin, DeleteView):
 
 # SUBCATEGORY VIEWS (CRUD)
 
-class SubcategoryView(LoginRequiredMixin, NotPrivileges, ListView):
+class SubcategoryView(NotPrivileges, ListView):
     permission_required = 'inventory.view_subcategory'
     model =  SubCategory
     template_name = 'inventory/subcategory_list.html'
     context_object_name =  'obj'
-    login_url = reverse_lazy('bases:login')
 
 
-class SubCategoryNew(LoginRequiredMixin, CreateView):
+class SubCategoryNew(NotPrivileges, CreateView):
+    permission_required = 'inventory.add_subcategory'
     model = SubCategory
     template_name = 'inventory/subcategory_form.html'
     form_class = SubCategoryForm
     success_url = reverse_lazy('inventory:subcategory_list')
-    login_url = reverse_lazy('bases:login')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -88,12 +90,12 @@ class SubCategoryNew(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class SubCategoryUpdate(LoginRequiredMixin, UpdateView):
+class SubCategoryUpdate(NotPrivileges, UpdateView):
+    permission_required = 'inventory.change_subcategory'
     model = SubCategory
     template_name = 'inventory/subcategory_form.html'
     form_class = SubCategoryForm
     success_url = reverse_lazy('inventory:subcategory_list')
-    login_url = reverse_lazy('bases:login')
     context_object_name = "obj"
 
     def form_valid(self, form):
@@ -101,7 +103,8 @@ class SubCategoryUpdate(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class SubCategoryDelete(LoginRequiredMixin, DeleteView):
+class SubCategoryDelete(DeleteView):
+    permission_required = 'inventory.delete_subcategory'
     model = SubCategory
     template_name = 'inventory/catalog_del.html'
     context_object_name = 'obj'
@@ -110,19 +113,18 @@ class SubCategoryDelete(LoginRequiredMixin, DeleteView):
 
 # BRAND VIEWS (CRUD) 
 
-class BrandsView(LoginRequiredMixin, ListView):
+class BrandsView(NotPrivileges, ListView):
+    permission_required = 'inventory.view_brand'
     model =  Brand
     template_name = 'inventory/brand_list.html'
     context_object_name =  'obj'
-    login_url = reverse_lazy('bases:login')
 
-
-class BrandNew(LoginRequiredMixin, CreateView):
+class BrandNew(NotPrivileges, CreateView):
+    permission_required = 'inventory.add_brand'
     model = Brand
     template_name = 'inventory/brand_form.html'
     form_class = BrandForm
     success_url = reverse_lazy('inventory:brand_list')
-    login_url = reverse_lazy('bases:login')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -130,19 +132,20 @@ class BrandNew(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class BrandUpdate(LoginRequiredMixin, UpdateView):
+class BrandUpdate(NotPrivileges, UpdateView):
+    permission_required = 'inventory.change_brand'
     model = Brand
     template_name = 'inventory/brand_form.html'
     form_class = BrandForm
     success_url = reverse_lazy('inventory:brand_list')
-    login_url = reverse_lazy('bases:login')
     context_object_name = "obj"
 
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
 
-
+@login_required(login_url='/login/')
+@permission_required('inventory.change_brand', login_url='bases:home_not_privileges')
 def brand_activate_deactivate(request, id):
     brand = Brand.objects.get(pk=id)
     context = {}
@@ -169,19 +172,19 @@ def brand_activate_deactivate(request, id):
 
 # UNIT OF MEASUREMENT VIEWS
 
-class UnitOfMeasurementView(LoginRequiredMixin, ListView):
+class UnitOfMeasurementView(NotPrivileges, ListView):
+    permission_required = 'inventory.view_unitofmeasurement'
     model =  UnitOfMeasurement
     template_name = 'inventory/unit_of_measurement_list.html'
     context_object_name =  'obj'
-    login_url = reverse_lazy('bases:login')
 
 
-class UnitOfMeasurementNew(LoginRequiredMixin, CreateView):
+class UnitOfMeasurementNew(NotPrivileges, CreateView):
+    permission_required = 'inventory.add_unitofmeasurement'
     model = UnitOfMeasurement
     template_name = 'inventory/unit_of_measurement_form.html'
     form_class = UnitOfMeasurementForm
     success_url = reverse_lazy('inventory:unit_of_measurement_list')
-    login_url = reverse_lazy('bases:login')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -189,19 +192,20 @@ class UnitOfMeasurementNew(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class UnitOfMeasurementUpdate(LoginRequiredMixin, UpdateView):
+class UnitOfMeasurementUpdate(NotPrivileges, UpdateView):
+    permission_required = 'inventory.change_unitofmeasurement'
     model = UnitOfMeasurement
     template_name = 'inventory/unit_of_measurement_form.html'
     form_class = UnitOfMeasurementForm
     success_url = reverse_lazy('inventory:unit_of_measurement_list')
-    login_url = reverse_lazy('bases:login')
     context_object_name = "obj"
 
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
 
-
+@login_required(login_url='/login/')
+@permission_required('inventory.change_unitofmeasurement', login_url='bases:home_not_privileges')
 def unit_of_measurement_activate_deactivate(request, id):
     unit_of_measurement = UnitOfMeasurement.objects.get(pk=id)
     context = {}
@@ -226,19 +230,19 @@ def unit_of_measurement_activate_deactivate(request, id):
 
 # PRODUCT VIEWS 
 
-class ProductsView(LoginRequiredMixin, ListView):
+class ProductsView(NotPrivileges, ListView):
+    permission_required = 'inventory.view_product'
     model =  Product
     template_name = 'inventory/product_list.html'
     context_object_name =  'obj'
-    login_url = reverse_lazy('bases:login')
 
 
-class ProductNew(LoginRequiredMixin, CreateView):
+class ProductNew(NotPrivileges, CreateView):
+    permission_required = 'inventory.add_product'
     model = Product
     template_name = 'inventory/product_form.html'
     form_class = ProductForm
     success_url = reverse_lazy('inventory:product_list')
-    login_url = reverse_lazy('bases:login')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -246,19 +250,20 @@ class ProductNew(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdate(LoginRequiredMixin, UpdateView):
+class ProductUpdate(NotPrivileges, UpdateView):
+    permission_required = 'inventory.change_product'
     model = Product
     template_name = 'inventory/product_form.html'
     form_class = ProductForm
     success_url = reverse_lazy('inventory:product_list')
-    login_url = reverse_lazy('bases:login')
     context_object_name = "obj"
 
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
         return super().form_valid(form)
 
-
+@login_required(login_url='/login/')
+@permission_required('inventory.change_product', login_url='bases:home_not_privileges')
 def product_activate_deactivate(request, id):
     product = Product.objects.get(pk=id)
     context = {}

@@ -5,7 +5,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
 
-class NotPrivileges(PermissionRequiredMixin):
+class NotPrivileges(LoginRequiredMixin, PermissionRequiredMixin):
+    login_url = reverse_lazy('bases:login')
     raise_exception = False
     redirect_field_name = 'redirect_to'
 
