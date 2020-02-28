@@ -31,3 +31,18 @@ class Vendor(ClassModel):
 
     class Meta:
         verbose_name_plural = "Vendors"
+
+
+class Purchase(ClassModel):
+    date_purchase = models.DateField(null=True, blank=True)
+    observations = models.TextField(blank=True, null=True)
+    invoice_number = models.CharField(max_length=100)
+    date_invoice = models.DateField()
+    sub_total = models.FloatField(default=0)
+    discount = models.FloatField(default=0)
+    total = models.FloatField(default=0)
+
+    proveedor = models.ForeignKey(Vendor, on_delete = models.CASCADE)
+
+    def __str__(self):
+        return'{}'.format(self.observations)
