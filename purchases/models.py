@@ -1,5 +1,6 @@
 from django.db import models
-from inventory.models import ClassModel
+from inventory.models import ClassModel, Product
+
 
 class Vendor(ClassModel):
     description=models.CharField(
@@ -42,7 +43,40 @@ class Purchase(ClassModel):
     discount = models.FloatField(default=0)
     total = models.FloatField(default=0)
 
-    proveedor = models.ForeignKey(Vendor, on_delete = models.CASCADE)
+    vendor = models.ForeignKey(Vendor, on_delete = models.CASCADE)
 
     def __str__(self):
         return'{}'.format(self.observations)
+
+    def save(self):
+        self.observations = self.observations.upper()
+        self.total = self.sub_total - self.discount
+        super(Purchase, self).save()
+
+    class Meta:
+        verbose_name_plural = "Header Purchases"
+        verbose_name = "Header Purchase"
+
+class PurchaseDetail(ClassModel):
+    purchase =  models.ForeignKey(Purchase, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.BigIntegerField(default=0)
+    price = models.FloatField(default=0)
+    sub_total = models.FloatField(default=0)
+    discount = models.FloatField(default=0)
+    total = models.FloatField(default=0)
+    cost =  models.FloatField(default=0)
+
+    def __str__(self):
+        return '{}'.format(self.product)
+
+    def save(self):
+        self.sub_total = float(float(self.quantity) * self.price )
+        self.total = self.sub_total - self.discount
+        super(PurchaseDetail,self).save()
+
+    class Meta:
+        verbose_name_plural = "Detail Purchases"
+        verbose_name = "Detail Purchase"
+
+

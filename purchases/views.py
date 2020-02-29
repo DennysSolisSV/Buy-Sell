@@ -10,7 +10,7 @@ from bases.views import NotPrivileges
 
 import json 
 from .forms import VendorForm
-from .models import Vendor
+from .models import Vendor, PurchaseDetail, Purchase
 
 class VendorView(NotPrivileges, ListView):
     permission_required = 'purchases.view_vendor'
@@ -70,3 +70,10 @@ def vendor_inactivate(request, pk):
         return  HttpResponse(msg)
 
     return render(request, template_name, context)
+
+class PurchaseView(NotPrivileges, ListView):
+    permission_required = 'purchases.view_purchase'
+    model =  Purchase
+    template_name = 'purchases/vendor_list.html'
+    context_object_name =  'obj'
+    login_url = reverse_lazy('bases:login')
