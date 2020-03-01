@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from inventory.models import ClassModel, Product
 
 
@@ -56,6 +57,12 @@ class Purchase(ClassModel):
     class Meta:
         verbose_name_plural = "Header Purchases"
         verbose_name = "Header Purchase"
+
+    def get_absolute_url(self):
+        return reverse("purchases:purchase_edit", kwargs={"pk": self.pk})
+
+    def del_absolute_url(self):
+        return reverse("purchases:purchase_del", kwargs={"pk": self.pk})
 
 class PurchaseDetail(ClassModel):
     purchase =  models.ForeignKey(Purchase, on_delete=models.CASCADE)

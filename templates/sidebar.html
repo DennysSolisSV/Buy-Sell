@@ -24,11 +24,11 @@
   
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
             <i class="fas fa-fw fa-cog"></i>
             <span>Catalog</span>
           </a>
-          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Catalog inventory</h6>
               {% if perms.inventory.view_category %}
@@ -48,10 +48,31 @@
               {% endif %}
 
               <h6 class="collapse-header">Purchases</h6>
-              <a class="collapse-item" href="{% url 'purchases:vendor_list' %}">Vendors</a>
+              {% if perms.purchase.view_vendor %}
+                <a class="collapse-item" href="{% url 'purchases:vendor_list' %}">Vendors</a>
+              {% endif %}
             </div>
           </div>
         </li> 
-        
-      </ul>
+
+        <!-- Movements -->
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-dolly"></i>
+            <span>Movements</span>
+          </a>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Entraces</h6>
+              {% if perms.purchase.view_purchase %}
+                <a class="collapse-item" href="{% url 'purchases:purchase_list' %}">Purchases</a>
+              {% endif %}
+              
+            </div>
+          </div>
+        </li> 
+        <div class="text-center d-none d-md-inline">
+          <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
       <!-- End of Sidebar -->
