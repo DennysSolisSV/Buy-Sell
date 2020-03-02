@@ -91,7 +91,7 @@
                                                         <td>{{ item.description }}</td>
                                                         <td>
                                                             <button type="button" class="btn btn-warning btn-circle"
-                                                            onclick="selectProducto({{item.id}},'{{item.descripcion}}')" ><i class="far fa-hand-pointer"></i></button>
+                                                            onclick="selectProduct({{item.id}},'{{item.description}}')" ><i class="far fa-hand-pointer"></i></button>
                                                         </td>
                                                         </tr>
                                                         {% endfor %}
@@ -119,7 +119,7 @@
                                             </div>
                                             <label for="id_dicount_detail" class="col-sm-2 col-form-label">Disc.:</label>
                                             <div class="col-sm-2">
-                                                <input type="text" class="form-control" name="id_dicount_detail" id="id_dicount_detail" value="00">
+                                                <input type="text" class="form-control" name="id_discount_detail" id="id_discount_detail" value="00">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -132,7 +132,7 @@
                                                 <input type="text" readonly class="form-control-plaintext col-sm-10" name="id_total_detail" id="id_total_detail" value="00">
                                             </div>
                                             <div class="col-sm-1">
-                                                <button type="button" class="btn btn-sm col-sm-2" onclick="clear_Detail();"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
+                                                <button type="button" class="btn btn-sm col-sm-2" onclick="clear_detail()"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
                                             </div>
                                         </div>
                                         <!-- Buttons -->
@@ -199,8 +199,84 @@
         $("#sidebarToggle").click();
 
         $('.table').DataTable({
-            "pageLength": 2,
+            "pageLength": 2
         });
+
+        //  calculate the values on the detail 
+        $('#id_quantity_detail,#id_price_detail,#id_discount_detail').change(function(){
+            calculate_detail();
+        });
+    })
+
+
+    function selectProduct(id,description)
+    {
+        $("#id_quantity_detail").val(0);
+        $('#id_price_detail').val(0);
+        $('#id_discount_detail').val(0);
+
+        $('#id_sub_total_detail').val(0);
+        $('#id_total_detail').val(0);
+
+        $("#id_id_product").val(+id);
+        $('#id_description_product').val(description);
+        $('#id_quantity_detail').focus();
+        $('#id_quantity_detail').select();
+
+        // CLEAR DATATABLE SEARCH
+        $('.table').DataTable().search('').draw();
+    }
+
+    function calculate_detail()
+    {
+        var quantity,price,discount,stotal,total;
+
+        quantity = $("#id_quantity_detail").val();
+        //  + for convert to numeric
+        quantity = quantity==="" ? 0 : +quantity;
+        quantity = quantity<0 ? 0 : quantity;
+
+        price =$('#id_price_detail').val();
+        price = price==="" ? 0 : +price;
+        price = price<0 ? 0 : price;
+
+        discount = $('#id_discount_detail').val();
+        discount = discount==="" ? 0 : +discount;
+        discount = discount<0 ? 0 : discount;
+
+        discount = discount>(quantity * price) ? 0 : discount;
+
+        stotal = quantity * price;
+        total  = stotal - discount;
+
+        $('#id_quantity_detail').val(quantity);
+        $('#id_price_detail').val(price);
+        $('#id_discount_detail').val(discount);
+
+        $('#id_sub_total_detail').val(stotal);
+        $('#id_total_detail').val(total);
+
+    }
+
+    function clear_detail(){
+        $('#id_quantity_detail').val(0);
+        $('#id_price_detail').val(0);
+        $('#id_discount_detail').val(0);
+
+        $('#id_sub_total_detail').val(0);
+        $('#id_total_detail').val(0);
+
+        $('#id_id_product').val('');
+        $('#id_description_product').val('');
+
+        $('.table').DataTable().search('').draw();
+
+        $("#id_vendor").focus();
+    }
+
+    $("#id_vendor").focus();
+
+
 
     //     $('#id_cantidad_detalle,#id_precio_detalle,#id_descuento_detalle').change(function(){
     //         calcular_detalle();
@@ -222,68 +298,11 @@
 
     // });
 
-    // function selectProducto(id,descripcion)
-    // {
-    //     $("#id_cantidad_detalle").val(0);
-    //     $('#id_precio_detalle').val(0);
-    //     $('#id_descuento_detalle').val(0);
 
-    //     $('#id_sub_total_detalle').val(0);
-    //     $('#id_total_detalle').val(0);
 
-    //     $("#id_id_producto").val(+id);
-    //     $('#id_descripcion_producto').val(descripcion);
-    //     $('#id_cantidad_detalle').focus();
-    //     $('#id_cantidad_detalle').select();
+    
 
-    //     $('.table').DataTable().search('').draw();
-    // }
-
-    // function calcular_detalle()
-    // {
-    //     var cant,prec,desc,stotal,total;
-
-    //     cant = $("#id_cantidad_detalle").val();
-    //     cant = cant==="" ? 0 : +cant;
-    //     cant = cant<0 ? 0 : cant;
-
-    //     prec =$('#id_precio_detalle').val();
-    //     prec = prec==="" ? 0 : +prec;
-    //     prec = prec<0 ? 0 : prec;
-
-    //     desc = $('#id_descuento_detalle').val();
-    //     desc = desc==="" ? 0 : +desc;
-    //     desc = desc<0 ? 0 : desc;
-
-    //     desc = desc>(cant * prec) ? 0 : desc;
-
-    //     stotal = cant * prec;
-    //     total  = stotal - desc;
-
-    //     $('#id_cantidad_detalle').val(cant);
-    //     $('#id_precio_detalle').val(prec);
-    //     $('#id_descuento_detalle').val(desc);
-
-    //     $('#id_sub_total_detalle').val(stotal);
-    //     $('#id_total_detalle').val(total);
-
-    // }
-
-    // function clear_Detail(){
-    //     $('#id_cantidad_detalle').val(0);
-    //     $('#id_precio_detalle').val(0);
-    //     $('#id_descuento_detalle').val(0);
-
-    //     $('#id_sub_total_detalle').val(0);
-    //     $('#id_total_detalle').val(0);
-
-    //     $('#id_id_producto').val('');
-    //     $('#id_descripcion_producto').val('');
-
-    //     $('.table').DataTable().search('').draw();
-
-    //     $("#id_proveedor").focus();
-    // }
+    // 
 
     // $("#id_proveedor").focus();
 </script>

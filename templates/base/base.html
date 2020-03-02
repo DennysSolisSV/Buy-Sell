@@ -25,6 +25,9 @@
   <!-- Jquery Confirm for this template-->
   <link href="{% static 'vendor/jquery_confirm/jquery-confirm.min.css' %}" rel="stylesheet">
 
+   <!-- Date time picker -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" /> 
+
 </head>
 
 <body id="page-top">
@@ -108,20 +111,21 @@
   <!-- Custom scripts for all pages-->
   <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
+  <!-- Date time picker -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>  
+
  <!-- Page level plugins -->
  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js'%}"></script>
  <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 
  <script src="{% static 'vendor/jquery_confirm/jquery-confirm.min.js' %}"></script>
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>  
-
  <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
  <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table-locale-all.min.js"></script>
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 
-  
+ {% block js %}{% endblock %}
 
   <script>
     $(document).ready(function () {
@@ -177,7 +181,7 @@
     </script>
   {% endblock control_modal %}
 
- {% block js %}{% endblock %}
+ 
 
 
 </body>
