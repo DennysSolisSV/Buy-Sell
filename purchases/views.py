@@ -1,8 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from bases.views import NotPrivileges
@@ -93,9 +93,10 @@ def purchase(request, pk=None):
     products = Product.objects.filter(status=True)
     form_purchase = {}
     context = {}
+    purchase_pk = pk
 
     if request.method == 'GET':
-        purchase = Purchase.objects.filter(pk=pk).first()
+        purchase = Purchase.objects.filter(pk=purchase_pk).first()
 
         if purchase:
             detail = PurchaseDetail.objects.filter(purchase=purchase)
@@ -127,5 +128,49 @@ def purchase(request, pk=None):
             'form_purchase': form_purchase
         }
 
-        return render(request, template_name, context)
+        
+
+    if request.method == 'POST':
+        date_purchase = request.POST.get("date_purchase")
+        observations = request.POST.get("observations")
+        invoice_number = request.POST.get("invoice_number")
+        date_invoice = request.POST.get("date_invoice")
+        vendor = request.POST.get("vendor")
+        sub_total = 0
+        discount = 0
+        total = 0
+
+        # For a new purchase
+        if not purchase_pk:
+            vendor=Vendor.objects.get(pk=vendor)
+
+            purchase = Purchase(
+                date_purchase = date_purchase,
+                observations = observations,
+                invoice_number = invoice_number,
+                date_invoice = date_invoice,
+                vendor = vendor,
+                created_by = request.user 
+            )
+            if purchase:
+                purchase.save()
+                purchase_pk = purchase.pk
+
+            # return reverse("purchases:purchase_edit", kwargs={"pk": purchase_pk})
+
+        #  Updating purchase        
+        else:
+            purchase = Purchase.objects.filter(pk=purchase_pk).first()
+            if purchase:
+                purchase.date_purchase = date_purchase
+                purchase.observations = observations
+                purchase.invoice_number = invoice_number
+                purchase.date_invoice = date_invoice
+                purchase.updated_by = request.user
+                purchase.save()
+
+        return redirect("purchases:purchase_list")
+
+
+    return render(request, template_name, context)
 
