@@ -203,6 +203,7 @@ def purchase(request, pk=None):
                 purchase.save()
 
         # return redirect("purchases:purchase_edit", pk = purchase_pk)
+        return redirect("purchases:purchase_list")
 
 
     return render(request, template_name, context)
