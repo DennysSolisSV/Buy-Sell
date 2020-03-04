@@ -96,6 +96,7 @@ def purchase(request, pk=None):
     form_purchase = {}
     context = {}
     purchase_pk = pk
+    new_purchase = False
 
     if request.method == 'GET':
         purchase = Purchase.objects.filter(pk=purchase_pk).first()
@@ -142,6 +143,7 @@ def purchase(request, pk=None):
 
         # For a new purchase
         if not purchase_pk:
+            new_purchase = True
             vendor=Vendor.objects.get(pk=vendor)
 
             purchase = Purchase(
@@ -156,7 +158,6 @@ def purchase(request, pk=None):
                 purchase.save()
                 purchase_pk = purchase.pk
 
-            return redirect("purchases:purchase_edit", pk = purchase_pk)
 
         #  Updating purchase        
         else:
@@ -202,7 +203,9 @@ def purchase(request, pk=None):
                 purchase.discount=discount["discount__sum"]
                 purchase.save()
 
-        # return redirect("purchases:purchase_edit", pk = purchase_pk)
+        if new_purchase:
+            return redirect("purchases:purchase_edit", pk = purchase_pk)
+
         return redirect("purchases:purchase_list")
 
 
