@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
@@ -9,6 +10,7 @@ from bases.views import NotPrivileges
 
 import datetime
 import json 
+
 from .forms import VendorForm, PurchaseForm
 from .models import Vendor, PurchaseDetail, Purchase
 from inventory.models import Product
@@ -121,14 +123,12 @@ def purchase(request, pk=None):
             form_purchase = PurchaseForm()
 
 
-        context={
+        context = {
             'products': products, 
             'header': purchase, 
             'detail': detail,
             'form_purchase': form_purchase
-        }
-
-        
+        }    
 
     if request.method == 'POST':
         date_purchase = request.POST.get("date_purchase")
@@ -156,7 +156,7 @@ def purchase(request, pk=None):
                 purchase.save()
                 purchase_pk = purchase.pk
 
-            # return reverse("purchases:purchase_edit", kwargs={"pk": purchase_pk})
+            return redirect("purchases:purchase_edit", pk = purchase_pk)
 
         #  Updating purchase        
         else:
@@ -169,7 +169,40 @@ def purchase(request, pk=None):
                 purchase.updated_by = request.user
                 purchase.save()
 
-        return redirect("purchases:purchase_list")
+            # return redirect("purchases:purchase_list")
+
+        #  Getting values from detail 
+
+        product_id = request.POST.get("id_id_product")
+        quantity = request.POST.get("id_quantity_detail")
+        price = request.POST.get("id_price_detail")
+        sub_total_detail = request.POST.get("id_sub_total_detail")
+        discount_detail  = request.POST.get("id_discount_detail")
+        total_detail  = request.POST.get("id_total_detail")
+
+        if product_id:
+            product = Product.objects.get(pk=product_id)
+
+            detail = PurchaseDetail(
+                purchase=purchase,
+                product=product,
+                quantity=quantity,
+                price=price,
+                discount=discount_detail,
+                cost=0,
+                created_by=request.user
+            )
+
+            if detail:
+                detail.save()
+
+                sub_total = PurchaseDetail.objects.filter(purchase=purchase_pk).aggregate(Sum('sub_total'))
+                discount = PurchaseDetail.objects.filter(purchase=purchase_pk).aggregate(Sum('discount'))
+                purchase.sub_total = sub_total["sub_total__sum"]
+                purchase.discount=discount["discount__sum"]
+                purchase.save()
+
+        # return redirect("purchases:purchase_edit", pk = purchase_pk)
 
 
     return render(request, template_name, context)

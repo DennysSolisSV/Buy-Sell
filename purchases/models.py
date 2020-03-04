@@ -78,8 +78,8 @@ class PurchaseDetail(ClassModel):
         return '{}'.format(self.product)
 
     def save(self):
-        self.sub_total = float(float(self.quantity) * self.price )
-        self.total = self.sub_total - self.discount
+        self.sub_total = float(float(self.quantity) * float(self.price) )
+        self.total = float(self.sub_total) - float(self.discount)
         super(PurchaseDetail,self).save()
 
     class Meta:
