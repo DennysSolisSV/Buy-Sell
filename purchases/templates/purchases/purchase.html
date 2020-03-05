@@ -206,6 +206,19 @@
         $('#id_quantity_detail,#id_price_detail,#id_discount_detail').change(function(){
             calculate_detail();
         });
+
+        // Validate when send detail if has values.
+        $("#frm_purchase").submit(function(e){
+            if($('#id_total_detail').val()==0 || $('#id_id_product').val()==0 ){
+                e.preventDefault();
+                $.alert({
+                        type:'red',
+                        title:'',
+                        content:'Not product or not values'
+                        })
+            }
+        });
+        
     })
 
 

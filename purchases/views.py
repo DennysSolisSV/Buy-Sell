@@ -200,7 +200,7 @@ def purchase(request, pk=None):
                 sub_total = PurchaseDetail.objects.filter(purchase=purchase_pk).aggregate(Sum('sub_total'))
                 discount = PurchaseDetail.objects.filter(purchase=purchase_pk).aggregate(Sum('discount'))
                 purchase.sub_total = sub_total["sub_total__sum"]
-                purchase.discount=discount["discount__sum"]
+                purchase.discount = discount["discount__sum"]
                 purchase.save()
 
         if new_purchase:

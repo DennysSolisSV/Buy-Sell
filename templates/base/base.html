@@ -125,14 +125,6 @@
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 
- {% block js %}{% endblock %}
-
-  <script>
-    $(document).ready(function () {
-        $('.table').DataTable();
-        });
-  </script>
-
   {% block control_modal %}
     <script>
       function open_modal(url)
@@ -163,7 +155,7 @@
           color = "orange";
         }
 
-        jQuery.alert({
+        $.alert({
           title: "",
           theme: "material",
           type: color,
@@ -180,6 +172,14 @@
 
     </script>
   {% endblock control_modal %}
+
+  {% block js %}{% endblock %}
+
+  <script>
+    $(document).ready(function () {
+        $('.table').DataTable();
+        });
+  </script>
 
  
 
