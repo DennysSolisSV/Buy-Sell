@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import ( VendorView, VendorNew, VendorUpdate,
-    vendor_inactivate, PurchaseView, PurchaseNew, purchase
+    vendor_inactivate, PurchaseView, PurchaseNew, purchase, PurchaseDetailDelete
     )
 
 app_name = 'purchases'
@@ -14,4 +14,5 @@ urlpatterns = [
     path('purchases/', PurchaseView.as_view(), name='purchase_list'),
     path('edit-purchase/<int:pk>', purchase, name='purchase_edit'),
     path('new-purchase/', purchase, name='purchase_new'),
+    path('purchase/delete/<int:pk>', PurchaseDetailDelete.as_view(), name='purchase_delete'),
 ]

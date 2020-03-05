@@ -211,3 +211,13 @@ def purchase(request, pk=None):
 
     return render(request, template_name, context)
 
+
+class PurchaseDetailDelete(NotPrivileges, DeleteView): 
+    permission_required = "purchases.delete_purchasedetail"
+    model = PurchaseDetail
+    template_name = "purchases/purchase_detail_delete.html"
+    context_object_name = "obj"
+
+    def get_success_url(self):
+        purchase_pk = self.kwargs['pk']
+        return redirect("purchases:purchase_edit", pk = purchase_pk)
