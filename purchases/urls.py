@@ -14,5 +14,5 @@ urlpatterns = [
     path('purchases/', PurchaseView.as_view(), name='purchase_list'),
     path('edit-purchase/<int:pk>', purchase, name='purchase_edit'),
     path('new-purchase/', purchase, name='purchase_new'),
-    path('purchase/delete/<int:pk>', PurchaseDetailDelete.as_view(), name='purchase_delete'),
+    path('<int:purchase_pk>/delete/<int:pk>', PurchaseDetailDelete.as_view(), name='purchase_detail_delete'),
 ]

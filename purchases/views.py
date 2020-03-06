@@ -203,10 +203,10 @@ def purchase(request, pk=None):
                 purchase.discount = discount["discount__sum"]
                 purchase.save()
 
-        if new_purchase:
-            return redirect("purchases:purchase_edit", pk = purchase_pk)
+    
+        return redirect("purchases:purchase_edit", pk = purchase_pk)
 
-        return redirect("purchases:purchase_list")
+    # return redirect("purchases:purchase_list")
 
 
     return render(request, template_name, context)
@@ -219,5 +219,5 @@ class PurchaseDetailDelete(NotPrivileges, DeleteView):
     context_object_name = "obj"
 
     def get_success_url(self):
-        purchase_pk = self.kwargs['pk']
-        return redirect("purchases:purchase_edit", pk = purchase_pk)
+        purchase_pk = self.kwargs['purchase_pk']
+        return reverse_lazy('purchases:purchase_edit', kwargs={'pk': purchase_pk})
