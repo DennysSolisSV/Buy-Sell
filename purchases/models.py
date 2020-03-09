@@ -1,6 +1,8 @@
 from django.db import models
+from django.db.models import Sum
 from django.urls import reverse
 from inventory.models import ClassModel, Product
+from django.db.models.signals import post_delete, post_save
 
 
 class Vendor(ClassModel):
@@ -86,4 +88,46 @@ class PurchaseDetail(ClassModel):
         verbose_name_plural = "Detail Purchases"
         verbose_name = "Detail Purchase"
 
+def post_save_purchase_detail_receiver(sender, instance, *args, **kwargs):
+    # updating product existence
+    product = Product.objects.get(id=instance.product.id)
+    product.stock = int(product.stock) + int(instance.quantity)
+    product.last_purchase = instance.purchase.date_purchase
+    product.save()
 
+
+post_save.connect(post_save_purchase_detail_receiver, sender=PurchaseDetail)
+
+
+def post_delete_purchase_detail_receiver(sender, instance, *args, **kwargs):
+    #  update the values on the purchase model 
+    purchase = Purchase.objects.get(id=instance.purchase.id)
+    purchase.sub_total, purchase.discount, \
+    purchase.total = get_sum_totals_detail_in_purchase(purchase)
+    purchase.save()
+
+    # updating product existence
+    product = Product.objects.get(id=instance.product.id)
+    product.stock = product.stock - instance.quantity
+    product.save()
+
+
+
+
+post_delete.connect(post_delete_purchase_detail_receiver, sender=PurchaseDetail)
+
+
+#  update the values on the purchase model 
+def get_sum_totals_detail_in_purchase(purchase):
+    detail = PurchaseDetail.objects.filter(purchase=purchase)
+    if detail:
+        out = detail.aggregate(Sum('sub_total'))
+        out1 = detail.aggregate(Sum('discount'))
+        out2 = detail.aggregate(Sum('total'))
+
+        return (out['sub_total__sum'],
+                out1['discount__sum'],
+                out2['total__sum']
+                )
+    else:
+        return 0, 0, 0

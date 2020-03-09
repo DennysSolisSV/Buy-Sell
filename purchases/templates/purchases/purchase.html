@@ -111,15 +111,15 @@
                                         <div class="form-group row">
                                             <label for="id_quantity_detail" class="col-sm-2 col-form-label">Quantity.:</label>
                                             <div class="col-sm-2">
-                                                <input type="number" class="form-control" name="id_quantity_detail" id="id_quantity_detail" value="00" required>
+                                                <input type="number" step=1 class="form-control" name="id_quantity_detail" id="id_quantity_detail" value="00" required>
                                             </div>
                                             <label for="id_price_detail" class="col-sm-2 col-form-label">Price:</label>
                                             <div class="col-sm-2">
-                                                <input type="number" class="form-control" name="id_price_detail" id="id_price_detail" value="00" required>
+                                                <input type="number" step=0.01 class="form-control" name="id_price_detail" id="id_price_detail" value="00" required>
                                             </div>
                                             <label for="id_dicount_detail" class="col-sm-2 col-form-label">Disc.:</label>
                                             <div class="col-sm-2">
-                                                <input type="text" class="form-control" name="id_discount_detail" id="id_discount_detail" value="00">
+                                                <input type="number" step=0.01 class="form-control" name="id_discount_detail" id="id_discount_detail" value="00">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -209,7 +209,7 @@
 
         // Validate when send detail if has values.
         $("#frm_purchase").submit(function(e){
-            if($('#id_total_detail').val()==0 || $('#id_id_product').val()==0 ){
+            if($('#id_total_detail').val()==0 || $('#id_quantity_detail').val()==0 ){
                 e.preventDefault();
                 $.alert({
                         type:'red',
