@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Purchase</title>
+
+    <style type="text/css">
+    @page {
+        size: letter;
+        margin: 1cm;
+    }
+
+    
+    .table { 
+        border-collapse:separate; 
+        border-spacing:0 15px; 
+    }
+
+    .gfg td {
+        width:150px; 
+        text-align:center; 
+        padding:3px 
+    }
+    
+    .gfg th, td { 
+        text-align:center; 
+        
+    }
+   
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h4>POS Admin</h4>
+                <h3>Report of purchase  {{ purchase.pk }}</h3>
+            </div>
+
+            <div class="list-group">
+                <p>No. purchase: {{ purchase.pk}} </p>
+                <table class="">
+                    <tbody>
+                        <tr>
+                            <td>Vendor:</td>
+                            <td>{{ purchase.vendor}}</td>
+                            <td>Date Purchase:</td>
+                            <td>{{ purchase.date_purchase|date:"d/m/Y"}}</td>
+                        </tr>
+                        <tr>
+                            <td>No. Invoice</td>
+                            <td>{{ purchase.invoice_number }}</td>
+                            <td>Date Invoice:</td>
+                            <td>{{ purchase.date_invoice|date:"d/m/Y"}}</td>
+                        </tr>
+                        <tr>
+                            <td>Observations:</td>
+                            <td colspan="3">{{ purchase.observations}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+            </div>
+
+
+            <table class="gfg">
+                <thead>
+                    <tr>
+                        <th class="number">Product</th>
+                        <th class="number">Quantity</th>
+                        <th class="number">Price</th>
+                        <th class="number">Subtotal</th>
+                        <th class="number">Discount</th>
+                        <th class="number">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in detail %}
+                    <tr>
+                        <td class="number">{{ item.product }}</td>
+                        <td class="number">{{ item.quantity }}</td>
+                        <td class="number">{{ item.price }}</td>
+                        <td class="number">{{ item.sub_total }}</td>
+                        <td class="number">{{ item.discount }}</td>
+                        <td class="number">{{ item.total }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="totals">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><h4>Sub Total</h4></td>
+                        <td class="number"><h4>{{ purchase.sub_total}}</h4></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><h4>Descuento</h4></td>
+                        <td class="number"><h4>{{ purchase.discount }}</h4></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><h4>Total</h4></td>
+                        <td class="number"><h4>{{ purchase.total}}</h4></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
