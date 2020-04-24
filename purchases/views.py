@@ -17,7 +17,7 @@ from inventory.models import Product
 
 class VendorView(NotPrivileges, ListView):
     permission_required = 'purchases.view_vendor'
-    model =  Vendor
+    model = Vendor
     template_name = 'purchases/vendor_list.html'
     context_object_name =  'obj'
 

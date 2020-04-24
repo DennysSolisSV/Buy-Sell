@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     
     'bases',
+    'facturation',
     'inventory',
     'purchases',
 ]
