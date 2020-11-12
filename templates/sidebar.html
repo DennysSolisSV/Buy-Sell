@@ -51,6 +51,13 @@
               {% if perms.purchase.view_vendor %}
                 <a class="collapse-item" href="{% url 'purchases:vendor_list' %}">Vendors</a>
               {% endif %}
+              <h6 class="collapse-header">Facturation</h6>
+              {% if perms.purchase.view_clients %}
+                <a class="collapse-item" href="{% url 'facturation:client_list' %}">Clients</a>
+              {% endif %}
+              {% if perms.purchase.view_invoiceheader %}
+                <a class="collapse-item" href="{% url 'facturation:invoices_list' %}">Invoices</a>
+              {% endif %}
             </div>
           </div>
         </li> 

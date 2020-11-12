@@ -13,7 +13,7 @@
   <title>Pos Admin</title>
 
   <!-- Custom fonts for this template-->
-  <script src="https://kit.fontawesome.com/84fbe3a8ba.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/64da5ff66b.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
@@ -28,6 +28,8 @@
    <!-- Date time picker -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" /> 
 
+  <!-- Boostrap table -->
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
 </head>
 
 <body id="page-top">
@@ -125,6 +127,11 @@
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
 
+ <!-- Boostrap table -->
+ <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
+
+
+ 
   {% block control_modal %}
     <script>
       function open_modal(url)
@@ -173,13 +180,9 @@
     </script>
   {% endblock control_modal %}
 
+  
   {% block js %}{% endblock %}
-
-  <script>
-    $(document).ready(function () {
-        $('.table').DataTable();
-        });
-  </script>
+  
 
  
 

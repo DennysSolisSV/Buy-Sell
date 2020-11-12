@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django_userforeignkey.models.fields import UserForeignKey
 
 class ClassModel(models.Model):
     status = models.BooleanField(default=True)
@@ -8,6 +9,18 @@ class ClassModel(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "created_%(class)ss")
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "updated_%(class)ss", blank=True, null=True)
+
+
+    class Meta:
+        abstract=True
+
+
+class ClassModel2(models.Model):
+    status = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    created_by = UserForeignKey(auto_user_add=True, related_name="+")
+    updated_by = UserForeignKey(auto_user_add=True, related_name="+")
 
 
     class Meta:

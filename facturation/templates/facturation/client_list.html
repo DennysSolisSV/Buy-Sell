@@ -5,14 +5,14 @@
     <div class="card shadow mb-4">
     <!-- Card Header - Dropdown -->
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Vendors</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Clients</h6>
         <div class="dropdown no-arrow">
             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                <i class="fas fa-ellipsis-v"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                 <div class="dropdown-header">Dropdown Header:</div>
-                <a class="dropdown-item" onclick="return open_modal('{% url 'purchases:vendor_new' %}')" href="#"><i class="fad fa-plus-square"></i>New</a>
+                
             </div>
         </div>
     </div>
@@ -20,37 +20,50 @@
     <div class="card-body">
         {% if not obj %}
             <div class="alert alert-info">
-                Not Vendors
+                Not Clients
             </div>
         {% else %}
-        <table id="table" class="table table-striped">
+        <!-- <table id="table" class="table table-striped" data-toggle="table"> -->
+        <div class="buttons-toolbar">
+            <a class="dropdown-item" onclick="return open_modal('{% url 'facturation:client_new' %}')" href="#"><i class="far fa-calendar-plus"></i> New</a>
+        </div>
+        <table 
+            data-toggle="table"
+            data-pagination="true"
+            data-search="true"
+            data-show-columns='true'
+            data-show-fullscreen="true"
+            data-toolbar=".buttons-toolbar"
+        >
             <thead>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Address</th>
-                <th>Contact</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Status</th>
+                <th data-field="id" data-sortable="true">Id</th>
+                <th data-field="name" data-sortable="true">Name</th>
+                <th data-field="lastname" data-sortable="true">Lastname</th>
+                <th data-field="phone" data-sortable="true">Phone</th>
+                <th data-field="type">Type</th>
+                <th data-field="status">Status</th>
                 <th class="all">Actions</th>
             </thead>
             <tbody>
                 {% for item in obj %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.description }}</td>
-                        <td>{{ item.address }}</td>
-                        <td>{{ item.contact }}</td>
-                        <td>{{ item.phone }}</td>
-                        <td>{{ item.email }}</td>
-                        <td>{{ item.status|yesno:"Active, Inactive" }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.lastname }}</td>
+                        <td>{{ item.movil }}</td>
+                        <td>{{ item.type_client }}</td>
                         <td>
-                            <a onclick="return open_modal('{% url 'purchases:vendor_edit' item.pk %}')" href="#" class="btn btn-warning btn-circle" role="button"><i class="far fa-edit"></i></a>
-                            {% if item.status %}
-                                <a onclick="return open_modal('{% url 'purchases:vendor_inactivate' item.pk %}')" href="#" class="btn btn-danger btn-circle" role="button"><i class="fas fa-thumbs-down"></i></a>
-                            {% else %}
-                                <a onclick="return open_modal('{% url 'purchases:vendor_inactivate' item.pk %}')" href="#" class="btn btn-success btn-circle" role="button"><i class="fas fa-thumbs-up"></i></a>
-                            {% endif %}
+                            <a href='', onclick="changeStatus({{item.pk}})">
+                                {% if  item.status %}
+                                    <p style="color:#2318c7";>{{ item.status|yesno:"Active, Inactive" }} <i class="far fa-thumbs-up text-primary"></i></p>
+                                {% else %}
+                                    <p style="color:#FF0000";>{{ item.status|yesno:"Active, Inactive" }} <i class="far fa-thumbs-down text-danger"></i></p>
+                                {% endif %}
+                                    
+                            </a>
+                        </td>
+                        <td>
+                            <a onclick="return open_modal('{% url 'facturation:client_edit' item.pk %}')" href="#" class="btn btn-warning btn-circle" role="button"><i class="far fa-edit"></i></a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -61,3 +74,44 @@
     </div>
 {% endblock %}
 
+{% block js %}
+ <script>
+     function changeStatus(pk)
+     {
+        var data = {pk:pk};
+        data = JSON.stringify(data);
+        var token = '{{csrf_token}}';
+        var url = 'ajax/change/status/' + pk;
+       
+        console.log(url)
+
+        $.ajax({
+           headers : {'X-CSRFToken': token},
+           type: 'POST',
+           url: url , 
+           data: data,
+           success: function(response){
+               if(response==='OK'){
+                   location.reload(true);
+               }
+               else {
+                   message('Error');
+               }
+           },
+           error: function(jqXHR, textStatus, errorThrow){
+               console.log(textStatus, errorThrow);
+               message(errorThrow, 'red');
+               close_modal();
+           }
+        });
+     }
+ </script>
+
+<!-- <script>
+    $(document).ready(function () {
+        $('.table').DataTable();
+        });
+  </script> -->
+{% endblock %}
+
+  
